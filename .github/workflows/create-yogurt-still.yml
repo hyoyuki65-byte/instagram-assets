@@ -13,6 +13,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - name: Install ffmpeg
+        run: sudo apt-get update && sudo apt-get install -y ffmpeg
       - name: Create still image from yogurt video
         run: |
           curl --fail --location --silent --show-error 'https://d2ol7oe51mr4n9.cloudfront.net/user_3HwgdBuFgLKm3rl6dv3BvC16SmO/4916b436-0403-4fda-a411-7a8714fe0fab.mp4' -o yogurt.mp4
