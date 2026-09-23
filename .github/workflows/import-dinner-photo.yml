@@ -1,26 +1,24 @@
-name: Import dinner photo
+name: Replace dinner photo
 on:
   push:
     paths:
       - '.github/workflows/import-dinner-photo.yml'
   workflow_dispatch:
-
 permissions:
   contents: write
-
 jobs:
-  import-photo:
+  replace-photo:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-      - name: Download original dinner photo
+      - uses: actions/checkout@v4
+      - name: Remove incorrect photo and download correct photo
         run: |
-          curl --fail --location --silent --show-error 'https://d2ol7oe51mr4n9.cloudfront.net/user_3HwgdBuFgLKm3rl6dv3BvC16SmO/ebd28223-d897-44d9-9447-46e755f9711b.jpg' --output 'japanese-dinner-2026-09-23.jpg'
-          file 'japanese-dinner-2026-09-23.jpg'
-      - name: Commit original photo
+          git rm -f --ignore-unmatch japanese-dinner-2026-09-23.jpg
+          curl --fail --location --silent --show-error 'https://d2ol7oe51mr4n9.cloudfront.net/user_3HwgdBuFgLKm3rl6dv3BvC16SmO/bfb82613-bc18-4d73-b515-a5cc8c53f628.jpg' --output 'japanese-dinner-2026-09-23-correct.jpg'
+          file 'japanese-dinner-2026-09-23-correct.jpg'
+      - name: Commit corrected photo
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add 'japanese-dinner-2026-09-23.jpg'
-          git diff --staged --quiet || (git commit -m 'Add Japanese dinner photo' && git push)
+          git add japanese-dinner-2026-09-23-correct.jpg
+          git diff --staged --quiet || (git commit -m 'Replace wrong dinner photo with correct photo' && git push)
