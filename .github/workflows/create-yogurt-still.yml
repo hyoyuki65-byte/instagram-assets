@@ -1,0 +1,25 @@
+name: Create yogurt still
+on:
+  push:
+    paths:
+      - '.github/workflows/create-yogurt-still.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build-still:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Create still image from yogurt video
+        run: |
+          curl --fail --location --silent --show-error 'https://d2ol7oe51mr4n9.cloudfront.net/user_3HwgdBuFgLKm3rl6dv3BvC16SmO/4916b436-0403-4fda-a411-7a8714fe0fab.mp4' -o yogurt.mp4
+          ffmpeg -y -ss 2.5 -i yogurt.mp4 -frames:v 1 -q:v 2 homemade-yogurt-from-milk.jpg
+      - name: Commit still image
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add homemade-yogurt-from-milk.jpg
+          git diff --staged --quiet || (git commit -m 'Add homemade yogurt still image' && git push)
